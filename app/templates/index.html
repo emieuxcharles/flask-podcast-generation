@@ -1,0 +1,67 @@
+{% extends 'includes/layout.html' %}
+
+
+{% block body %}
+<main class="container">
+  <div class="bg-light p-5 rounded mt-5">
+    <h1>Podcast Generator</h1>
+    <p class="lead">Podcast Generator</p>
+
+    <!-- <h2>Enter the services your company provides</h2> -->
+    <form class="" action="/generate" method="post">
+      <div class="mb-3">
+        <!-- <label class="form-label">Services Provided</label> -->
+        <input type="text" class="form-control" name="generatePodcast" placeholder="">
+        <div class="form-text">Describe the podcast</div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg">Generate</button>
+    </form>
+  </div>
+
+  <div class="bg-light p-3 rounded">
+    <div class="row">
+      <div class="col-4">
+        <!-- <img class="w-100" src="{{ openAIAnswerPicture }}" alt="" srcset=""> -->
+        {%if openAIAnswerPicture %}
+          <img class="w-100" src="{{ url_for('static', filename='image.jpg') }}" alt="" srcset="">
+        {% endif %}
+      </div>
+      <div class="col-8">
+        <h3 class="text-primary">{{query}}</h3>
+        <p class="lead fs-6">
+          {% autoescape false %}
+            {{openAIAnswer}}
+          {% endautoescape %}
+        </p>
+      </div>
+    </div>
+  </div>
+  {% if openAIAnswer %}
+  <div class="bg-light p-5 rounded mt-5">
+    <form class="" action="/generate-audio" method="post">
+      <div class="mb-3">
+        <input type="hidden" name="generatePodcastAudio" value="{{openAIAnswer}}" placeholder="">
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg">Generate Podcast Audio</button>
+    </form>
+  </div>
+  {% endif %}
+
+  {% if audioIsGenerated %}
+  <div class="bg-light p-5 rounded mt-5">
+    <audio controls src="{{ url_for('static', filename='audio.mp3') }}" class="mb-3"></audio>
+  </div>
+  {% endif %}
+
+  {% if audioIsGenerated %}
+  <div class="bg-light p-5 rounded mt-5">
+    <form class="" action="/generate-video" method="post">
+      <div class="mb-3">
+        <input type="hidden" name="podcastName" value="{{query}}">
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg">Generate Podcast Video</button>
+    </form>
+  </div>
+  {% endif %}
+</main>
+{% endblock %}

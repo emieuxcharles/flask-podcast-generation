@@ -1,0 +1,6 @@
+flask
+redis
+openai
+requests
+elevenlabs
+moviepy
